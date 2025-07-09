@@ -1,5 +1,3 @@
-
-import { useState } from "react";
 import { 
   Home, 
   Calendar, 
@@ -10,8 +8,6 @@ import {
   FileText, 
   Workflow, 
   BarChart3,
-  ChevronLeft,
-  ChevronRight,
   Settings,
   Moon
 } from "lucide-react";
@@ -32,38 +28,21 @@ const sidebarItems = [
 ];
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   return (
-    <div className={cn(
-      "bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 transition-all duration-300 flex flex-col h-screen",
-      collapsed ? "w-16" : "w-64"
-    )}>
+    <div className="w-64 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 flex flex-col h-screen">
       {/* Header */}
-      <div className="p-4 border-b border-border/10 flex items-center justify-between">
-        <div className={cn(
-          "flex items-center gap-3 transition-opacity duration-200",
-          collapsed && "opacity-0"
-        )}>
-          <img 
-            src="https://cdn.prod.website-files.com/5e53d34464688e6f5960a338/682f1bb36cedcb0cd39a7027_Onehash-CalId-logo%20icon.svg" 
-            alt="Cal ID" 
-            className="w-10 h-10"
-          />
-          <span className="text-foreground font-bold text-xl tracking-wide">Cal ID</span>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCollapsed(!collapsed)}
-          className="text-muted-foreground hover:text-foreground hover:bg-accent/50 h-8 w-8 p-0"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </Button>
+      <div className="p-4 border-b border-border/10 flex items-center gap-3">
+        <img 
+          src="https://cdn.prod.website-files.com/5e53d34464688e6f5960a338/682f1bb36cedcb0cd39a7027_Onehash-CalId-logo%20icon.svg" 
+          alt="Cal ID" 
+          className="w-10 h-10"
+        />
+        <span className="text-foreground font-bold text-xl tracking-wide">Cal ID</span>
       </div>
 
-      {/* Navigation - Limited to visible area, no scroll */}
+      {/* Navigation */}
       <nav className="flex-1 p-3 overflow-hidden">
         <ul className="space-y-1">
           {sidebarItems.slice(0, 9).map((item, index) => {
@@ -80,17 +59,7 @@ export function Sidebar() {
                   )}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
-                  <span className={cn(
-                    "font-medium transition-opacity duration-200",
-                    collapsed && "opacity-0"
-                  )}>
-                    {item.label}
-                  </span>
-                  {collapsed && (
-                    <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40 shadow-lg">
-                      {item.label}
-                    </div>
-                  )}
+                  <span className="font-medium">{item.label}</span>
                 </a>
               </li>
             );
@@ -102,31 +71,22 @@ export function Sidebar() {
       <div className="p-3 border-t border-border/10 space-y-2">
         <Button
           variant="ghost"
-          className={cn(
-            "w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50",
-            collapsed && "justify-center"
-          )}
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50"
         >
           <Moon className="w-5 h-5 flex-shrink-0" />
-          {!collapsed && <span className="font-medium">Dark Mode</span>}
+          <span className="font-medium">Dark Mode</span>
         </Button>
         <Button
           variant="ghost"
-          className={cn(
-            "w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50",
-            collapsed && "justify-center"
-          )}
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50"
         >
           <Settings className="w-5 h-5 flex-shrink-0" />
-          {!collapsed && <span className="font-medium">Settings</span>}
+          <span className="font-medium">Settings</span>
         </Button>
       </div>
 
       {/* User Profile */}
-      <div className={cn(
-        "p-3 border-t border-border/10 transition-opacity duration-200",
-        collapsed && "opacity-0"
-      )}>
+      <div className="p-3 border-t border-border/10">
         <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-accent/30 transition-colors cursor-pointer">
           <div className="w-8 h-8 bg-gradient-to-br from-[#007ee5] to-[#0066cc] rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
             JD
