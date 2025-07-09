@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Calendar, 
@@ -101,13 +100,13 @@ export function Dashboard() {
   const setupProgress = (completedTasks / setupTasks.length) * 100;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground ml-64">
       {/* Header */}
       <header className="border-b border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-light tracking-tight">Your total meetings</h1>
+              <h1 className="text-2xl font-extralight tracking-tight">Your total meetings</h1>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="text-4xl font-extralight text-primary">47</span>
                 <span className="text-sm text-muted-foreground font-light">this month</span>
@@ -256,7 +255,7 @@ export function Dashboard() {
                         <div className="w-2 h-2 bg-primary rounded-full opacity-80"></div>
                         <div className="flex-1 space-y-1">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-normal text-sm">{meeting.title}</h4>
+                            <h4 className="font-light text-sm">{meeting.title}</h4>
                             <span className="text-xs text-muted-foreground font-light">{meeting.time}</span>
                           </div>
                           <div className="flex items-center gap-3">
@@ -304,7 +303,7 @@ export function Dashboard() {
                       </div>
                       <div className="flex-1 space-y-1">
                         <div className="flex items-start justify-between">
-                          <h4 className="font-normal text-sm">{notification.title}</h4>
+                          <h4 className="font-light text-sm">{notification.title}</h4>
                           <span className="text-xs text-muted-foreground font-light">{notification.time}</span>
                         </div>
                         <p className="text-xs text-muted-foreground font-light">{notification.description}</p>
@@ -329,11 +328,11 @@ export function Dashboard() {
                 <div className="space-y-4">
                   <div className="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-primary">Product Demo</h3>
-                      <Badge className="bg-primary/20 text-primary border-primary/20">24 bookings</Badge>
+                      <h3 className="font-light text-primary">Product Demo</h3>
+                      <Badge className="bg-primary/20 text-primary border-primary/20 font-light">24 bookings</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground font-light mb-3">30 min • Showcase our latest features</p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground font-light">
                       <span>This month: 24</span>
                       <span>•</span>
                       <span>Conversion: 85%</span>

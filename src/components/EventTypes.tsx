@@ -298,18 +298,22 @@ export function EventTypes() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Header with glass effect */}
-      <div className="border-b border-border/20 bg-card/30 backdrop-blur-md supports-[backdrop-filter]:bg-card/20 relative">
+    <div className="min-h-screen bg-background text-foreground ml-64">
+      {/* Sticky Header with glass effect and grain */}
+      <div className="sticky top-0 z-30 border-b border-border/20 bg-card/30 backdrop-blur-md supports-[backdrop-filter]:bg-card/20 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundSize: '256px 256px'
+        }}></div>
         <div className="relative px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-semibold text-foreground mb-2">Event Types</h1>
-              <p className="text-muted-foreground">Create events to share for people to book on your calendar.</p>
+              <h1 className="text-3xl font-extralight tracking-tight text-foreground mb-2">Event Types</h1>
+              <p className="text-muted-foreground font-light">Create events to share for people to book on your calendar.</p>
             </div>
             <Button 
-              className="bg-[#007ee5] hover:bg-[#0066cc] text-white font-medium transition-all duration-200 hover:scale-105"
+              className="bg-[#007ee5] hover:bg-[#0066cc] text-white font-light transition-all duration-200 hover:scale-105"
               onClick={() => setIsCreateDialogOpen(true)}
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -326,7 +330,7 @@ export function EventTypes() {
             <TabsList className="bg-card/50 border border-border/20 p-1">
               <TabsTrigger 
                 value="personal" 
-                className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200"
+                className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200 font-light"
               >
                 <User className="w-4 h-4" />
                 Personal
@@ -335,7 +339,7 @@ export function EventTypes() {
                 <TabsTrigger 
                   key={team.id} 
                   value={team.id} 
-                  className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200"
+                  className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200 font-light"
                 >
                   <Users className="w-4 h-4" />
                   {team.name}
@@ -351,25 +355,24 @@ export function EventTypes() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search event types..."
-              className="pl-10 h-10 border-border/40 bg-card/30 focus:border-[#007ee5]/50"
+              className="pl-10 h-10 border-border/40 bg-card/30 focus:border-[#007ee5]/50 font-light"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           
-          {activeTab !== "personal" && (
-            <div className="flex items-center gap-2 px-3 py-2 bg-muted/30 rounded-md text-sm text-muted-foreground border border-border/20">
-              <span>{currentData.url}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 hover:bg-accent/50"
-                onClick={() => copyToClipboard(currentData.url)}
-              >
-                <Copy className="w-3 h-3" />
-              </Button>
-            </div>
-          )}
+          {/* Show meeting link for both personal and team tabs */}
+          <div className="flex items-center gap-2 px-3 py-2 bg-muted/30 rounded-md text-sm text-muted-foreground border border-border/20">
+            <span className="font-light">{currentData.url}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0 hover:bg-accent/50"
+              onClick={() => copyToClipboard(currentData.url)}
+            >
+              <Copy className="w-3 h-3" />
+            </Button>
+          </div>
         </div>
 
         {/* Event Types Grid */}
@@ -388,23 +391,23 @@ export function EventTypes() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-medium text-lg group-hover:text-[#007ee5] transition-colors">
+                        <h3 className="font-light text-lg group-hover:text-[#007ee5] transition-colors">
                           {eventType.title}
                         </h3>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2 font-light">
                         {eventType.description}
                       </p>
                       <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-muted-foreground" />
                           <div className="flex items-center gap-2">
-                            <span className="px-2 py-1 bg-muted/50 rounded text-xs">{eventType.duration}</span>
-                            <span className="px-2 py-1 bg-muted/50 rounded text-xs">{eventType.altDuration}</span>
+                            <span className="px-2 py-1 bg-muted/50 rounded text-xs font-light">{eventType.duration}</span>
+                            <span className="px-2 py-1 bg-muted/50 rounded text-xs font-light">{eventType.altDuration}</span>
                           </div>
                         </div>
                         {eventType.bookingsToday > 0 && (
-                          <span className="text-muted-foreground text-xs">
+                          <span className="text-muted-foreground text-xs font-light">
                             {eventType.bookingsToday} bookings today
                           </span>
                         )}
@@ -420,19 +423,19 @@ export function EventTypes() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover/95 backdrop-blur">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="font-light">
                           <Eye className="w-4 h-4 mr-2" />
                           Preview
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="font-light">
                           <Copy className="w-4 h-4 mr-2" />
                           Copy Link
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEditEvent(eventType)}>
+                        <DropdownMenuItem onClick={() => handleEditEvent(eventType)} className="font-light">
                           <Edit className="w-4 h-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem className="text-red-600 font-light">
                           <Trash2 className="w-4 h-4 mr-2" />
                           Delete
                         </DropdownMenuItem>

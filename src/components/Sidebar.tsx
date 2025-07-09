@@ -31,7 +31,7 @@ export function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="w-64 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 flex flex-col h-screen">
+    <div className="w-64 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 flex flex-col h-screen fixed left-0 top-0 z-40">
       {/* Header */}
       <div className="p-4 border-b border-border/10 flex items-center gap-3">
         <img 
@@ -39,7 +39,7 @@ export function Sidebar() {
           alt="Cal ID" 
           className="w-10 h-10"
         />
-        <span className="text-foreground font-bold text-xl tracking-wide">Cal ID</span>
+        <span className="text-foreground font-light text-xl tracking-wide">Cal ID</span>
       </div>
 
       {/* Navigation */}
@@ -54,12 +54,12 @@ export function Sidebar() {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
                     "text-muted-foreground hover:text-foreground hover:bg-accent/50",
-                    "group relative",
-                    isActive && "bg-[#007ee5]/10 text-[#007ee5] border border-[#007ee5]/20"
+                    "group relative font-light",
+                    isActive && "bg-accent/50 text-foreground"
                   )}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium">{item.label}</span>
+                  <span className="font-light">{item.label}</span>
                 </a>
               </li>
             );
@@ -71,29 +71,29 @@ export function Sidebar() {
       <div className="p-3 border-t border-border/10 space-y-2">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50"
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50 font-light"
         >
           <Moon className="w-5 h-5 flex-shrink-0" />
-          <span className="font-medium">Dark Mode</span>
+          <span className="font-light">Dark Mode</span>
         </Button>
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50"
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50 font-light"
         >
           <Settings className="w-5 h-5 flex-shrink-0" />
-          <span className="font-medium">Settings</span>
+          <span className="font-light">Settings</span>
         </Button>
       </div>
 
       {/* User Profile */}
       <div className="p-3 border-t border-border/10">
         <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-accent/30 transition-colors cursor-pointer">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#007ee5] to-[#0066cc] rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
+          <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-foreground text-sm font-light">
             JD
           </div>
           <div className="flex-1">
-            <p className="text-foreground text-sm font-medium">John Doe</p>
-            <p className="text-muted-foreground text-xs">john@example.com</p>
+            <p className="text-foreground text-sm font-light">John Doe</p>
+            <p className="text-muted-foreground text-xs font-light">john@example.com</p>
           </div>
         </div>
       </div>
