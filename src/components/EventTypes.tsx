@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Plus, Search, Copy, MoreHorizontal, Settings, Users, User, Eye, Edit, Trash2, Calendar, Clock, Zap } from "lucide-react";
+import { Plus, Search, Copy, MoreHorizontal, User, Users, Clock, Eye, Edit, Trash2, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { EventEditDialog } from "./EventEditDialog";
+import { CreateEventDialog } from "./CreateEventDialog";
+import { useNavigate } from "react-router-dom";
 
 const personalEventTypes = [
   {
@@ -275,204 +275,208 @@ const teams = [
 export function EventTypes() {
   const [activeTab, setActiveTab] = useState("personal");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const getUserInfo = () => ({
-    name: "Sanskar Yadav",
-    username: "sanskar",
-    avatar: "S"
-  });
-
-  const getStatsForPeriod = () => ({
-    thisMonth: {
-      value: 18,
-      trend: "+12%"
-    },
-    thisWeek: {
-      value: 7,
-      trend: "+9%"
-    },
-    today: {
-      value: 3,
-      trend: "-2%"
-    }
-  });
-
-  const user = getUserInfo();
-  const stats = getStatsForPeriod();
-
-  const getCurrentEventTypes = () => {
+  const getCurrentTabData = () => {
     if (activeTab === "personal") {
-      return personalEventTypes;
+      return { name: "Sanskar Yadav", username: "sanskar", avatar: "S", url: "cal.id/sanskar", eventTypes: personalEventTypes };
     }
     const selectedTeam = teams.find(team => team.id === activeTab);
-    return selectedTeam?.eventTypes || [];
+    return selectedTeam ? { 
+      name: selectedTeam.name, 
+      username: selectedTeam.id, 
+      avatar: selectedTeam.icon, 
+      url: selectedTeam.url, 
+      eventTypes: selectedTeam.eventTypes 
+    } : { name: "Sanskar Yadav", username: "sanskar", avatar: "S", url: "cal.id/sanskar", eventTypes: personalEventTypes };
   };
 
-  const filteredEventTypes = getCurrentEventTypes().filter(eventType => 
+  const currentData = getCurrentTabData();
+  const filteredEventTypes = currentData.eventTypes.filter(eventType => 
     eventType.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     eventType.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEditEvent = (eventType) => {
-    setSelectedEvent(eventType);
-    setIsEditDialogOpen(true);
+    navigate(`/event-types/edit/${eventType.id}`);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Blue Loading Bar */}
-      <div className="h-1 bg-[#007ee5] animate-pulse"></div>
-
-      {/* Header */}
-      <header className="border-b border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
-        <div className="px-6 py-4">
+      {/* Header Section with Profile/Team Info */}
+      <div className="border-b border-border/20 bg-card/30 backdrop-blur">
+        <div className="px-6 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-light tracking-tight">Event Types</h1>
-              <p className="text-sm text-muted-foreground font-light mt-1">
-                Create events to share for people to book on your calendar.
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#007ee5] to-[#0066cc] rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                {currentData.avatar}
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground">{currentData.name}</h1>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-muted-foreground text-sm">{currentData.url}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 hover:bg-accent/50"
+                    onClick={() => copyToClipboard(currentData.url)}
+                  >
+                    <Copy className="w-3 h-3" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">{currentData.eventTypes.length} event types</p>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="h-8 px-3 font-light border-border/40 hover:border-border hover:bg-accent/50">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </Button>
-              <Button size="sm" className="h-8 px-4 font-light bg-primary hover:bg-primary/90">
-                <Plus className="w-4 h-4 mr-2" />
-                New
-              </Button>
-            </div>
+            <Button 
+              className="bg-[#007ee5] hover:bg-[#0066cc] text-white font-medium transition-all duration-200 hover:scale-105"
+              onClick={() => setIsCreateDialogOpen(true)}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Event
+            </Button>
           </div>
         </div>
-      </header>
+      </div>
 
-      <div className="mx-0 px-6 py-6">
-        {/* Teams Grid */}
-        <div className="mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {teams.map(team => (
-              <Card key={team.id} className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30 hover:bg-card/60 transition-all duration-200 cursor-pointer" onClick={() => setActiveTab(team.id)}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 ${team.color} rounded-lg flex items-center justify-center text-white text-lg shadow-lg`}>
-                      {team.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-sm">{team.name}</h3>
-                      <p className="text-xs text-muted-foreground">{team.eventTypes.length} events</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Tabs and Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <div className="flex items-center justify-between mb-6">
-            <TabsList className="bg-card/50 border border-border/20">
-              <TabsTrigger value="personal" className="flex items-center gap-2">
+      <div className="px-6 py-4">
+        {/* Tabs and Search */}
+        <div className="flex items-center justify-between mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
+            <TabsList className="bg-card/50 border border-border/20 p-1">
+              <TabsTrigger 
+                value="personal" 
+                className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200"
+              >
                 <User className="w-4 h-4" />
                 Personal
               </TabsTrigger>
               {teams.map(team => (
-                <TabsTrigger key={team.id} value={team.id} className="flex items-center gap-2">
+                <TabsTrigger 
+                  key={team.id} 
+                  value={team.id} 
+                  className="flex items-center gap-2 data-[state=active]:bg-[#007ee5]/10 data-[state=active]:text-[#007ee5] data-[state=active]:border-[#007ee5]/20 transition-all duration-200"
+                >
                   <Users className="w-4 h-4" />
                   {team.name}
                 </TabsTrigger>
               ))}
             </TabsList>
+          </Tabs>
 
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search event types..."
-                  className="pl-10 w-64 h-8 border-border/40 bg-card/30"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+          <div className="flex items-center gap-3 ml-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search event types..."
+                className="pl-10 w-64 h-9 border-border/40 bg-card/30 focus:border-[#007ee5]/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
+        </div>
 
-          <TabsContent value={activeTab} className="mt-0">
-            <div className="space-y-4">
-              {filteredEventTypes.map(eventType => (
-                <Card key={eventType.id} className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30 hover:bg-card/60 transition-all duration-200">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className={`w-8 h-8 ${eventType.color} rounded-lg flex items-center justify-center text-white`}>
-                          <Zap className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-medium text-lg">{eventType.title}</h3>
-                            {eventType.bookingsToday > 0 && (
-                              <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
-                                {eventType.bookingsToday} today
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground font-light mb-3">
-                            {eventType.description}
-                          </p>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{eventType.duration}</span>
-                              <span>•</span>
-                              <span>{eventType.altDuration}</span>
-                            </div>
-                          </div>
-                        </div>
+        {/* Team URL Display */}
+        {activeTab !== "personal" && (
+          <div className="mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-md text-sm text-muted-foreground">
+              <span>{currentData.url}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0"
+                onClick={() => copyToClipboard(currentData.url)}
+              >
+                <Copy className="w-3 h-3" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Event Types Grid */}
+        <div className="space-y-3">
+          {filteredEventTypes.map(eventType => (
+            <Card 
+              key={eventType.id} 
+              className="border-border/20 bg-card/50 backdrop-blur hover:bg-card/70 transition-all duration-200 hover:scale-[1.01] cursor-pointer group"
+              onClick={() => handleEditEvent(eventType)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className={`w-10 h-10 ${eventType.color} rounded-lg flex items-center justify-center text-white shadow-sm`}>
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-medium text-lg group-hover:text-[#007ee5] transition-colors">
+                          {eventType.title}
+                        </h3>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Switch checked={eventType.isActive} />
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Eye className="w-4 h-4 mr-2" />
-                              Preview
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy Link
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditEvent(eventType)}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                        {eventType.description}
+                      </p>
+                      <div className="flex items-center gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-muted-foreground" />
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-muted/50 rounded text-xs">{eventType.duration}</span>
+                            <span className="px-2 py-1 bg-muted/50 rounded text-xs">{eventType.altDuration}</span>
+                          </div>
+                        </div>
+                        {eventType.bookingsToday > 0 && (
+                          <span className="text-muted-foreground text-xs">
+                            {eventType.bookingsToday} bookings today
+                          </span>
+                        )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Switch checked={eventType.isActive} />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-popover/95 backdrop-blur">
+                        <DropdownMenuItem>
+                          <Eye className="w-4 h-4 mr-2" />
+                          Preview
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy Link
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEditEvent(eventType)}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-        {/* Event Edit Dialog */}
-        <EventEditDialog
-          event={selectedEvent}
-          isOpen={isEditDialogOpen}
-          onClose={() => setIsEditDialogOpen(false)}
+        {/* Create Event Dialog */}
+        <CreateEventDialog
+          isOpen={isCreateDialogOpen}
+          onClose={() => setIsCreateDialogOpen(false)}
+          currentTab={activeTab}
+          teams={teams}
         />
       </div>
     </div>

@@ -11,7 +11,9 @@ import {
   Workflow, 
   BarChart3,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Settings,
+  Moon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,11 +37,11 @@ export function Sidebar() {
 
   return (
     <div className={cn(
-      "bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 transition-all duration-300 flex flex-col",
+      "bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 transition-all duration-300 flex flex-col h-screen",
       collapsed ? "w-16" : "w-64"
     )}>
       {/* Header */}
-      <div className="p-6 border-b border-border/10 flex items-center justify-between">
+      <div className="p-4 border-b border-border/10 flex items-center justify-between">
         <div className={cn(
           "flex items-center gap-3 transition-opacity duration-200",
           collapsed && "opacity-0"
@@ -47,9 +49,9 @@ export function Sidebar() {
           <img 
             src="https://cdn.prod.website-files.com/5e53d34464688e6f5960a338/682f1bb36cedcb0cd39a7027_Onehash-CalId-logo%20icon.svg" 
             alt="Cal ID" 
-            className="w-8 h-8"
+            className="w-10 h-10"
           />
-          <span className="text-foreground font-light text-lg tracking-wide">Cal ID</span>
+          <span className="text-foreground font-bold text-xl tracking-wide">Cal ID</span>
         </div>
         <Button
           variant="ghost"
@@ -61,31 +63,31 @@ export function Sidebar() {
         </Button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4">
+      {/* Navigation - Limited to visible area, no scroll */}
+      <nav className="flex-1 p-3 overflow-hidden">
         <ul className="space-y-1">
-          {sidebarItems.map((item, index) => {
+          {sidebarItems.slice(0, 9).map((item, index) => {
             const isActive = location.pathname === item.path;
             return (
               <li key={index}>
                 <a
                   href={item.path}
                   className={cn(
-                    "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200",
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
                     "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                     "group relative",
-                    isActive && "bg-accent/30 text-foreground border border-border/20"
+                    isActive && "bg-[#007ee5]/10 text-[#007ee5] border border-[#007ee5]/20"
                   )}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
                   <span className={cn(
-                    "font-light transition-opacity duration-200",
+                    "font-medium transition-opacity duration-200",
                     collapsed && "opacity-0"
                   )}>
                     {item.label}
                   </span>
                   {collapsed && (
-                    <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40">
+                    <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40 shadow-lg">
                       {item.label}
                     </div>
                   )}
@@ -96,18 +98,42 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      {/* Footer */}
+      {/* Bottom Actions */}
+      <div className="p-3 border-t border-border/10 space-y-2">
+        <Button
+          variant="ghost"
+          className={cn(
+            "w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50",
+            collapsed && "justify-center"
+          )}
+        >
+          <Moon className="w-5 h-5 flex-shrink-0" />
+          {!collapsed && <span className="font-medium">Dark Mode</span>}
+        </Button>
+        <Button
+          variant="ghost"
+          className={cn(
+            "w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-accent/50",
+            collapsed && "justify-center"
+          )}
+        >
+          <Settings className="w-5 h-5 flex-shrink-0" />
+          {!collapsed && <span className="font-medium">Settings</span>}
+        </Button>
+      </div>
+
+      {/* User Profile */}
       <div className={cn(
-        "p-4 border-t border-border/10 transition-opacity duration-200",
+        "p-3 border-t border-border/10 transition-opacity duration-200",
         collapsed && "opacity-0"
       )}>
-        <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-accent/30 transition-colors cursor-pointer">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary/80 to-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
+        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-accent/30 transition-colors cursor-pointer">
+          <div className="w-8 h-8 bg-gradient-to-br from-[#007ee5] to-[#0066cc] rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
             JD
           </div>
           <div className="flex-1">
-            <p className="text-foreground text-sm font-light">John Doe</p>
-            <p className="text-muted-foreground text-xs font-light">john@example.com</p>
+            <p className="text-foreground text-sm font-medium">John Doe</p>
+            <p className="text-muted-foreground text-xs">john@example.com</p>
           </div>
         </div>
       </div>
