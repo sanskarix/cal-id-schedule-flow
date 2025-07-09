@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "react-router-dom";
 
 const sidebarItems = [
   { icon: Home, label: "Home", path: "/" },
@@ -30,6 +31,7 @@ const sidebarItems = [
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
 
   return (
     <div className={cn(
@@ -62,29 +64,35 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-1">
-          {sidebarItems.map((item, index) => (
-            <li key={index}>
-              <button className={cn(
-                "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200",
-                "text-muted-foreground hover:text-foreground hover:bg-accent/50",
-                "group relative",
-                index === 0 && "bg-accent/30 text-foreground border border-border/20"
-              )}>
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                <span className={cn(
-                  "font-light transition-opacity duration-200",
-                  collapsed && "opacity-0"
-                )}>
-                  {item.label}
-                </span>
-                {collapsed && (
-                  <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40">
+          {sidebarItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <li key={index}>
+                <a
+                  href={item.path}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200",
+                    "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                    "group relative",
+                    isActive && "bg-accent/30 text-foreground border border-border/20"
+                  )}
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className={cn(
+                    "font-light transition-opacity duration-200",
+                    collapsed && "opacity-0"
+                  )}>
                     {item.label}
-                  </div>
-                )}
-              </button>
-            </li>
-          ))}
+                  </span>
+                  {collapsed && (
+                    <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40">
+                      {item.label}
+                    </div>
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
