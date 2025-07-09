@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Dashboard } from "@/components/Dashboard";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -7,7 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 const Index = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-950">
+      <div className="min-h-screen flex w-full bg-background">
         <Sidebar />
         <main className="flex-1">
           <Dashboard />

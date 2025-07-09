@@ -11,7 +11,9 @@ import {
   ChevronRight,
   Grid3x3,
   Eye,
-  EyeOff
+  EyeOff,
+  Filter,
+  CalendarDays
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,45 +72,67 @@ export function Dashboard() {
   const setupProgress = (completedTasks / setupTasks.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="border-b border-gray-800 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Welcome back, John!</h1>
-            <p className="text-gray-400 mt-1">Here's what's happening with your calendar today.</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowWidgetSettings(!showWidgetSettings)}
-              className="border-gray-700 text-gray-300 hover:text-white"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Customize
-            </Button>
+      <header className="border-b border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-light tracking-tight">Your total meetings</h1>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-5xl font-extralight text-primary">47</span>
+                <span className="text-sm text-muted-foreground font-light">this month</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 px-4 font-light border-border/40 hover:border-border hover:bg-accent/50"
+              >
+                <CalendarDays className="w-4 h-4 mr-2" />
+                Select Dates
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowWidgetSettings(!showWidgetSettings)}
+                className="h-9 px-4 font-light border-border/40 hover:border-border hover:bg-accent/50"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filter
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowWidgetSettings(!showWidgetSettings)}
+                className="h-9 px-4 font-light hover:bg-accent/50"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Customize
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="p-6">
+      <div className="px-8 py-8">
         {/* Widget Settings Panel */}
         {showWidgetSettings && (
-          <Card className="mb-6 bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+          <Card className="mb-8 border-border/40 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-light flex items-center gap-2">
                 <Grid3x3 className="w-5 h-5" />
                 Dashboard Widgets
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 {widgets.map((widget) => (
-                  <div key={widget.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
+                  <div key={widget.id} className="flex items-center justify-between p-4 rounded-lg border border-border/20 bg-card/30">
                     <div className="flex items-center gap-3">
-                      {widget.enabled ? <Eye className="w-4 h-4 text-green-400" /> : <EyeOff className="w-4 h-4 text-gray-500" />}
-                      <span className="text-sm">{widget.title}</span>
+                      {widget.enabled ? <Eye className="w-4 h-4 text-primary" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}
+                      <span className="text-sm font-light">{widget.title}</span>
                     </div>
                     <Switch
                       checked={widget.enabled}
@@ -123,51 +147,61 @@ export function Dashboard() {
 
         {/* Stats Cards */}
         {widgets.find(w => w.id === "stats")?.enabled && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-gray-900 border-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30 hover:bg-card/60 transition-all duration-200">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Today</p>
-                    <p className="text-2xl font-bold">3</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-light text-muted-foreground">New meetings</span>
+                    <Calendar className="w-4 h-4 text-primary" />
                   </div>
-                  <Calendar className="w-8 h-8 text-blue-500" />
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extralight">12</span>
+                    <div className="flex items-center text-xs text-green-500">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      15%
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-light">compared to last week</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900 border-gray-800">
+            <Card className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30 hover:bg-card/60 transition-all duration-200">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">This Week</p>
-                    <p className="text-2xl font-bold">12</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-light text-muted-foreground">Total hours</span>
+                    <Clock className="w-4 h-4 text-primary" />
                   </div>
-                  <Clock className="w-8 h-8 text-green-500" />
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extralight">84</span>
+                    <div className="flex items-center text-xs text-red-500">
+                      <TrendingUp className="w-3 h-3 mr-1 rotate-180" />
+                      4%
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-light">compared to last week</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900 border-gray-800">
+            <Card className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30 hover:bg-card/60 transition-all duration-200">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">This Month</p>
-                    <p className="text-2xl font-bold">47</p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-light text-muted-foreground">Avg. meeting time</span>
+                    <Users className="w-4 h-4 text-primary" />
                   </div>
-                  <Users className="w-8 h-8 text-purple-500" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900 border-gray-800">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-400 text-sm">Growth</p>
-                    <p className="text-2xl font-bold">+23%</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extralight">42</span>
+                    <span className="text-sm font-light text-muted-foreground">min</span>
+                    <div className="flex items-center text-xs text-green-500">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      8%
+                    </div>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-orange-500" />
+                  <p className="text-xs text-muted-foreground font-light">compared to last week</p>
                 </div>
               </CardContent>
             </Card>
@@ -177,35 +211,37 @@ export function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Meetings */}
           {widgets.find(w => w.id === "upcoming")?.enabled && (
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-500" />
-                  Upcoming Meetings
-                </CardTitle>
+            <Card className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
+              <CardHeader className="pb-6">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-light">Recent meetings</CardTitle>
+                  <Button variant="ghost" size="sm" className="text-primary font-light">
+                    View all
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-1">
                   {upcomingMeetings.map((meeting, index) => (
-                    <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-medium">{meeting.title}</h4>
-                            <p className="text-sm text-gray-400 mt-1">{meeting.time} • {meeting.date}</p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="secondary" className="text-xs">
-                                {meeting.type}
-                              </Badge>
-                              <span className="text-xs text-gray-500">
-                                {meeting.attendees.length} attendee{meeting.attendees.length > 1 ? 's' : ''}
-                              </span>
-                            </div>
+                    <div key={index} className="group flex items-center gap-4 p-4 rounded-xl hover:bg-accent/30 transition-all duration-200 cursor-pointer">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="w-2 h-2 bg-primary rounded-full opacity-80"></div>
+                        <div className="flex-1 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-normal text-sm">{meeting.title}</h4>
+                            <span className="text-xs text-muted-foreground font-light">{meeting.time}</span>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-gray-500" />
+                          <div className="flex items-center gap-3">
+                            <Badge variant="secondary" className="text-xs font-light bg-accent/50 text-muted-foreground">
+                              {meeting.type}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground font-light">
+                              {meeting.attendees.length} attendee{meeting.attendees.length > 1 ? 's' : ''}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   ))}
                 </div>
@@ -215,42 +251,37 @@ export function Dashboard() {
 
           {/* Setup Progress */}
           {widgets.find(w => w.id === "setup")?.enabled && (
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-green-500" />
-                    Complete Your Setup
-                  </span>
-                  <span className="text-sm text-gray-400">{completedTasks}/{setupTasks.length}</span>
+            <Card className="border-border/20 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/30">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-light flex items-center justify-between">
+                  <span>Complete your setup</span>
+                  <span className="text-sm font-light text-muted-foreground">{completedTasks}/{setupTasks.length}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-400">Progress</span>
-                    <span className="text-sm font-medium">{Math.round(setupProgress)}%</span>
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-light text-muted-foreground">Progress</span>
+                    <span className="text-sm font-light">{Math.round(setupProgress)}%</span>
                   </div>
-                  <Progress value={setupProgress} className="h-2" />
+                  <Progress value={setupProgress} className="h-2 bg-accent/30" />
                 </div>
 
                 <div className="space-y-3">
                   {setupTasks.map((task, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/30">
-                      <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-                        task.completed ? 'bg-green-500' : 'bg-gray-600'
+                    <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-accent/20 transition-colors">
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
+                        task.completed ? 'bg-primary' : 'bg-accent/50 border-2 border-border/40'
                       }`}>
-                        {task.completed ? (
-                          <Check className="w-3 h-3 text-white" />
-                        ) : (
-                          <X className="w-3 h-3 text-gray-400" />
+                        {task.completed && (
+                          <Check className="w-3 h-3 text-primary-foreground" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className={`text-sm font-medium ${task.completed ? 'line-through text-gray-500' : ''}`}>
+                        <p className={`text-sm font-light ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
                           {task.task}
                         </p>
-                        <p className="text-xs text-gray-400">{task.description}</p>
+                        <p className="text-xs text-muted-foreground font-light">{task.description}</p>
                       </div>
                     </div>
                   ))}

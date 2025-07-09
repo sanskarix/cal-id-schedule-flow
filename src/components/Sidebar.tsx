@@ -33,11 +33,11 @@ export function Sidebar() {
 
   return (
     <div className={cn(
-      "bg-gray-900 border-r border-gray-800 transition-all duration-300 flex flex-col",
+      "bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-r border-border/20 transition-all duration-300 flex flex-col",
       collapsed ? "w-16" : "w-64"
     )}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+      <div className="p-6 border-b border-border/10 flex items-center justify-between">
         <div className={cn(
           "flex items-center gap-3 transition-opacity duration-200",
           collapsed && "opacity-0"
@@ -47,13 +47,13 @@ export function Sidebar() {
             alt="Cal ID" 
             className="w-8 h-8"
           />
-          <span className="text-white font-semibold text-lg">Cal ID</span>
+          <span className="text-foreground font-light text-lg tracking-wide">Cal ID</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setCollapsed(!collapsed)}
-          className="text-gray-400 hover:text-white hover:bg-gray-800"
+          className="text-muted-foreground hover:text-foreground hover:bg-accent/50 h-8 w-8 p-0"
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </Button>
@@ -61,21 +61,27 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
-        <ul className="space-y-2">
+        <ul className="space-y-1">
           {sidebarItems.map((item, index) => (
             <li key={index}>
               <button className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200",
-                "text-gray-300 hover:text-white hover:bg-gray-800",
-                index === 0 && "bg-blue-600/20 text-blue-400 border border-blue-600/30"
+                "w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200",
+                "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                "group relative",
+                index === 0 && "bg-accent/30 text-foreground border border-border/20"
               )}>
                 <item.icon className="w-5 h-5 flex-shrink-0" />
                 <span className={cn(
-                  "transition-opacity duration-200",
+                  "font-light transition-opacity duration-200",
                   collapsed && "opacity-0"
                 )}>
                   {item.label}
                 </span>
+                {collapsed && (
+                  <div className="absolute left-full ml-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 border border-border/40">
+                    {item.label}
+                  </div>
+                )}
               </button>
             </li>
           ))}
@@ -84,16 +90,16 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className={cn(
-        "p-4 border-t border-gray-800 transition-opacity duration-200",
+        "p-4 border-t border-border/10 transition-opacity duration-200",
         collapsed && "opacity-0"
       )}>
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+        <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-accent/30 transition-colors cursor-pointer">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary/80 to-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
             JD
           </div>
           <div className="flex-1">
-            <p className="text-white text-sm font-medium">John Doe</p>
-            <p className="text-gray-400 text-xs">john@example.com</p>
+            <p className="text-foreground text-sm font-light">John Doe</p>
+            <p className="text-muted-foreground text-xs font-light">john@example.com</p>
           </div>
         </div>
       </div>
