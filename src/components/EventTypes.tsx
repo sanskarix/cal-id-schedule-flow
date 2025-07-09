@@ -140,10 +140,7 @@ export function EventTypes() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="h-8 px-3 font-light border-border/40 hover:border-border hover:bg-accent/50">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </Button>
+              
               <Button size="sm" className="h-8 px-4 font-light bg-primary hover:bg-primary/90">
                 <Plus className="w-4 h-4 mr-2" />
                 New
